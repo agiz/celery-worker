@@ -3,15 +3,11 @@
 case "$1" in
   worker|scheduler)
     # To give the webserver time to run initdb.
-    sleep 1
-    pwd
-    ls -la /app/
-    ls -la
-    ls -la /
+    sleep 10
     exec celery -A test_celery.celery_config worker --loglevel=info
     ;;
   flower)
-    sleep 1
+    sleep 10
     exec celery -A test_celery.celery_config flower
     ;;
   *)
