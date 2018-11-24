@@ -1,0 +1,35 @@
+version: '3'
+services:
+  rabbit:
+    image: 'rabbitmq:latest'
+    ports:
+      - '5672:5672'
+  worker:
+    build:
+      dockerfile: Dockerfile
+      context: ./worker
+    environment:
+      - RABBIT_HOST=rabbit
+      - PGHOST=192.168.1.150
+      - PGPORT=5432
+      - PGDATABASE=postgres
+      - PGUSER=postgres
+      - PGPASSWORD=mysecretpassword
+    depends_on:
+      - rabbit
+  flower:
+    build:
+      dockerfile: Dockerfile
+      context: ./worker
+    environment:
+      - RABBIT_HOST=rabbit
+      - PGHOST=192.168.1.150
+      - PGPORT=5432
+      - PGPASSWORD=mysecretpassword
+      - PGUSER=postgres
+      - PGDATABASE=postgres
+    ports:
+      - '5555:5555'
+    depends_on:
+      - rabbit
+    command: flower
